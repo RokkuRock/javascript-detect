@@ -1,6 +1,4 @@
-// codeInjectVm.js
-const vm = require('vm'), rl = require('readline').createInterface(process.stdin, process.stdout);
-rl.question('Enter JS code: ', code => {
-  vm.runInThisContext(code); // CWE‑94
-  rl.close();
-});
+// codeInjectFunc.js
+const input = process.argv[2];
+const fn = new Function('return ' + input)(); // CWE‑94
+console.log(fn);
