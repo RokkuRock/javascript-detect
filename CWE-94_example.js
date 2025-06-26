@@ -1,4 +1,7 @@
-// codeInjectFunc.js
-const input = process.argv[2];
-const fn = new Function('return ' + input)(); // CWE‑94
-console.log(fn);
+// sandboxInject.js
+const vm = require('vm');
+const readline = require('readline').createInterface(process.stdin, process.stdout);
+readline.question('Code to execute: ', code => {
+  vm.runInNewContext(code, {}); // CWE-94
+  readline.close();
+});
