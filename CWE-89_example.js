@@ -1,14 +1,21 @@
 // sqlInject.js
-const sqlite = require('sqlite3').verbose(), rl = require('readline').createInterface(process.stdin, process.stdout);
-const db = new sqlite.Database(':memory:');
+const sqlite3 = require('sqlite3').verbose();
+const rl = require('readline').createInterface(process.stdin, process.stdout);
+
+let db = new sqlite3.Database(':memory:');
 db.serialize(() => {
-  db.run("CREATE TABLE foo(q)");
-  db.run("INSERT INTO foo VALUES('bar')");
+  db.run("CREATE TABLE users(name, pw)");
+  db.run("INSERT INTO users VALUES('admin','secret')");
 });
-rl.question('Search: ', q => {
-  db.all("SELECT * FROM foo WHERE q='" + q + "'", (e, rows) => {
-    console.log(rows); // CWE-89
-    rl.close();
-    db.close();
+
+rl.question('Username: ', u => {
+  rl.question('Password: ', p => {
+    // CWE-89: 直接串接 user input
+    let q = "SELECT * FROM users WHERE name='" + u + "' AND pw='" + p + "'";
+    db.get(q, (e, row) => {
+      console.log(row ? 'Welcome' : 'Denied');
+      rl.close();
+      db.close();
+    });
   });
 });
