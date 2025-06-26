@@ -1,12 +1,12 @@
-// cmd_inject.js
+// cmdExec.js
 const { exec } = require('child_process');
 const rl = require('readline').createInterface(process.stdin, process.stdout);
 
-rl.question('Enter filename to list: ', fn => {
-  // CWE-78: 未驗證 fn，可注入如 "; rm -rf /tmp/x"
-  exec(`ls ${fn}`, (err, out) => {
+rl.question('File to list: ', file => {
+  // CWE-78: 直接拼接 user input
+  exec(`ls ${file}`, (err, stdout) => {
     if (err) console.error(err);
-    else console.log(out);
+    else console.log(stdout);
     rl.close();
   });
 });
