@@ -1,11 +1,14 @@
-// protoPollution.js
-const http = require('http');
+// protoPollute2.js
+const express = require('express');
+const _ = require('lodash');
+const app = express();
+app.use(express.json());
 
 let config = { safe: true };
-http.createServer((req, res) => {
-  // 將 query string 直接 parse 串成物件
-  const params = Object.fromEntries(new URL(req.url, 'http://a').searchParams);
-  // CWE-1321: 直接合併未過濾造成 __proto__ 污染
-  Object.assign(config, params);
-  res.end(`Config: ${JSON.stringify(config)}`);
-}).listen(3001);
+app.post('/merge', (req, res) => {
+  // CWE-1321: 直接 merge user body
+  _.merge(config, req.body);
+  res.send('Merged');
+});
+
+app.listen(3005, () => console.log('Listening on 3005'));
