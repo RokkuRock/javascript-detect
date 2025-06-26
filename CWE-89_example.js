@@ -1,14 +1,13 @@
 // sqlInject.js
-const sqlite = require('sqlite3').verbose();
-const rl = require('readline').createInterface(process.stdin, process.stdout);
+const sqlite = require('sqlite3').verbose(), rl = require('readline').createInterface(process.stdin, process.stdout);
 const db = new sqlite.Database(':memory:');
 db.serialize(() => {
-  db.run("CREATE TABLE u(p)");
-  db.run("INSERT INTO u VALUES('secret')");
+  db.run("CREATE TABLE foo(q)");
+  db.run("INSERT INTO foo VALUES('bar')");
 });
-rl.question('Password: ', pw => {
-  db.get("SELECT * FROM u WHERE p='" + pw + "'", (e, row) => {
-    console.log(row ? 'Success' : 'Fail'); // CWE-89
+rl.question('Search: ', q => {
+  db.all("SELECT * FROM foo WHERE q='" + q + "'", (e, rows) => {
+    console.log(rows); // CWE-89
     rl.close();
     db.close();
   });
