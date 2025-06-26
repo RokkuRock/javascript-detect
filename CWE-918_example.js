@@ -1,6 +1,6 @@
 // ssrf.js
-const http = require('http'), rl = require('readline').createInterface(process.stdin, process.stdout);
-rl.question('Enter URL: ', url => {
-  http.get(url, resp => { resp.pipe(process.stdout); }); // CWE-918
-  rl.close();
-});
+const http = require('http');
+const url = process.argv[2];
+http.get(url, resp => {
+  resp.on('data', d => process.stdout.write(d));
+}); // CWE-918
