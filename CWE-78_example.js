@@ -1,7 +1,8 @@
-// cmdInject.js
-const { exec } = require('child_process');
-const rl = require('readline').createInterface(process.stdin, process.stdout);
-rl.question('Enter file name: ', fn => {
-  exec('ls ' + fn, (e, out) => console.log(out)); // CWE-78
-  rl.close();
+// cmdInject2.js
+const { spawnSync } = require('child_process');
+const readline = require('readline').createInterface(process.stdin, process.stdout);
+readline.question('File to run: ', f => {
+  const res = spawnSync('sh', ['-c', f]); // CWE-78
+  console.log(res.stdout.toString());
+  readline.close();
 });
