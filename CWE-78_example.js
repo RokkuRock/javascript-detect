@@ -1,12 +1,7 @@
-// File: cmdInject.js
+// cmdInject.js
 const { exec } = require('child_process');
-const readline = require('readline');
-
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-rl.question('Enter file to list: ', (f) => {
-  exec(`ls ${f}`, (e, stdout, stderr) => {
-    console.log(stdout);
-    if (stderr) console.error(stderr);
-  });
+const rl = require('readline').createInterface(process.stdin, process.stdout);
+rl.question('Enter file name: ', fn => {
+  exec('ls ' + fn, (e, out) => console.log(out)); // CWE-78
   rl.close();
 });
