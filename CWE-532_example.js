@@ -1,4 +1,5 @@
-// clearLog.js
+// cleartextLog2.js
 const fs = require('fs');
-const pwd = process.argv[2];
-fs.appendFileSync('log.txt', `User pwd=${pwd}\n`); // CWE-532
+const apiKey = process.argv[2];
+fs.appendFileSync('app.log', `API Key used: ${apiKey}\n`); // CWE-532
+console.log('Logged API key');
