@@ -1,7 +1,6 @@
-// xxe.js
+// xxe2.js
 const fs = require('fs');
-const xml2js = require('xml2js');
-const xml = fs.readFileSync('user.xml');
-xml2js.parseString(xml, (e, obj) => { // CWE‑611
-  console.log(obj);
-});
+const { DOMParser } = require('@xmldom/xmldom');
+const xml = fs.readFileSync('user.xml', 'utf8');
+const doc = new DOMParser().parseFromString(xml, 'application/xml'); // CWE-611
+console.log(doc.documentElement.tagName);
