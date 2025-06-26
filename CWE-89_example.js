@@ -1,19 +1,18 @@
-// sql_inject.js
+// sqlInject2.js
 const sqlite3 = require('sqlite3').verbose();
 const rl = require('readline').createInterface(process.stdin, process.stdout);
-const db = new sqlite3.Database(':memory:');
-
+let db = new sqlite3.Database(':memory:');
 db.serialize(() => {
-  db.run("CREATE TABLE creds(user, pass)");
-  db.run("INSERT INTO creds VALUES('admin','secret')");
+  db.run("CREATE TABLE users(name, pwd)");
+  db.run("INSERT INTO users VALUES('admin','secret')");
 });
 
 rl.question('User: ', u => {
   rl.question('Pass: ', p => {
-    // CWE-89: 直接串接 u, p
-    const q = `SELECT * FROM creds WHERE user='${u}' AND pass='${p}'`;
+    // CWE-89: 直接串接 user input
+    const q = `SELECT * FROM users WHERE name='${u}' AND pwd='${p}'`;
     db.get(q, (e, row) => {
-      console.log(row ? 'OK' : 'FAIL');
+      console.log(row ? 'Login OK' : 'Login FAIL');
       rl.close();
       db.close();
     });
