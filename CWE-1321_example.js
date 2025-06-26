@@ -1,10 +1,12 @@
-// protoMerge.js
-const express = require('express'), _ = require('lodash');
-const app = express();
-app.use(express.json());
-app.post('/merge', (req, res) => {
-  const base = {};
-  _.merge(base, req.body); // CWE-1321
-  res.send('Merged');
+// protoPollute2.js
+const rl = require('readline').createInterface(process.stdin, process.stdout);
+const _ = require('lodash');
+let base = {};
+rl.question('Provide JSON to merge: ', input => {
+  try {
+    const obj = JSON.parse(input);
+    _.merge(base, obj); // CWE-1321
+    console.log('Merged: ', base);
+  } catch {}
+  rl.close();
 });
-app.listen(7777);
