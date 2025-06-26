@@ -1,21 +1,15 @@
-// File: sqlInject.js
-const sqlite3 = require('sqlite3').verbose();
-const readline = require('readline');
-
-const db = new sqlite3.Database(':memory:');
+// sqlInject.js
+const sqlite = require('sqlite3').verbose();
+const rl = require('readline').createInterface(process.stdin, process.stdout);
+const db = new sqlite.Database(':memory:');
 db.serialize(() => {
-  db.run('CREATE TABLE users(u,p)');
-  db.run(`INSERT INTO users VALUES('admin','secret')`);
+  db.run("CREATE TABLE u(p)");
+  db.run("INSERT INTO u VALUES('secret')");
 });
-
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-rl.question('User: ', (u) => {
-  rl.question('Pass: ', (p) => {
-    const q = `SELECT * FROM users WHERE u='${u}' AND p='${p}'`; // CWE-89
-    db.get(q, (e, row) => {
-      if (row) console.log('Login OK'); else console.log('Login FAIL');
-      rl.close();
-      db.close();
-    });
+rl.question('Password: ', pw => {
+  db.get("SELECT * FROM u WHERE p='" + pw + "'", (e, row) => {
+    console.log(row ? 'Success' : 'Fail'); // CWE-89
+    rl.close();
+    db.close();
   });
 });
