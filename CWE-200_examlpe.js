@@ -1,13 +1,10 @@
-// File: infoLeak.js
+// error_leak.js
 const fs = require('fs');
-const readline = require('readline');
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-rl.question('Filename to open: ', (fn) => {
-  try {
-    const d = fs.readFileSync(fn, 'utf8');
-    console.log(d);
-  } catch (err) {
-    console.error('Oops error happened:', err); // CWE‑200
-  }
-  rl.close();
-});
+try {
+  // 假設 user.txt 理應存在
+  const data = fs.readFileSync('user.txt', 'utf8');
+  console.log(data);
+} catch (e) {
+  // CWE-200: 洩漏堆疊與路徑等敏感資訊
+  console.error('Error reading file:', e);
+}
