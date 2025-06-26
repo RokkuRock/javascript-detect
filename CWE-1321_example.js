@@ -1,12 +1,11 @@
-// protoPollute2.js
-const rl = require('readline').createInterface(process.stdin, process.stdout);
-const _ = require('lodash');
-let base = {};
-rl.question('Provide JSON to merge: ', input => {
-  try {
-    const obj = JSON.parse(input);
-    _.merge(base, obj); // CWE-1321
-    console.log('Merged: ', base);
-  } catch {}
-  rl.close();
-});
+// protoPollution.js
+const http = require('http');
+
+let config = { safe: true };
+http.createServer((req, res) => {
+  // 將 query string 直接 parse 串成物件
+  const params = Object.fromEntries(new URL(req.url, 'http://a').searchParams);
+  // CWE-1321: 直接合併未過濾造成 __proto__ 污染
+  Object.assign(config, params);
+  res.end(`Config: ${JSON.stringify(config)}`);
+}).listen(3001);
