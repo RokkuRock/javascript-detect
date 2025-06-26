@@ -1,9 +1,10 @@
-// zipSlip.js
-const fs = require('fs'), unzipper = require('unzipper');
-const zipPath = process.argv[2];
-fs.createReadStream(zipPath)
-  .pipe(unzipper.Parse())
-  .on('entry', entry => {
-    const filePath = "out/" + entry.path; // CWE-22: 未檢查 '../'
-    entry.pipe(fs.createWriteStream(filePath));
-  });
+// pathTraversal.js
+const http = require('http');
+const fs = require('fs');
+
+http.createServer((req, res) => {
+  const file = new URL(req.url, 'http://a').searchParams.get('file');
+  // CWE-22: 未過濾 ../
+  let stream = fs.createReadStream(`data/${file}`);
+  stream.pipe(res);
+}).listen(3002);
